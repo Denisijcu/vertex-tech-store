@@ -145,12 +145,8 @@
   <div id="products-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 </section>
 
-
-
-<!-- Testimonios -->
 <!-- Testimonios -->
 <section class="max-w-3xl mx-auto px-6 pb-24 space-y-6">
-  <!-- Testimonio 1 -->
   <div class="card-glass neon-border rounded-2xl p-10 fade-up">
     <div class="flex items-center gap-4">
       <img src="https://api.dicebear.com/9.x/avataaars/svg?seed=Musk" alt="Mr. Musk" class="w-14 h-14 rounded-full bg-zinc-800" />
@@ -164,7 +160,6 @@
     <blockquote class="mt-5 text-lg text-zinc-300 italic">"La arquitectura y el rendimiento de las soluciones superan lo esperado. Muy sólido."</blockquote>
   </div>
 
-  <!-- Testimonio 2 -->
   <div class="card-glass neon-border rounded-2xl p-10 fade-up">
     <div class="flex items-center gap-4">
       <img src="https://api.dicebear.com/9.x/avataaars/svg?seed=SarahChen" alt="Sarah Chen" class="w-14 h-14 rounded-full bg-zinc-800" />
@@ -178,7 +173,6 @@
     <blockquote class="mt-5 text-lg text-zinc-300 italic">"Integrar los modelos y optimizar los flujos de trabajo con su soporte nos ahorró semanas de desarrollo."</blockquote>
   </div>
 
-  <!-- Testimonio 3 -->
   <div class="card-glass neon-border rounded-2xl p-10 fade-up">
     <div class="flex items-center gap-4">
       <img src="https://api.dicebear.com/9.x/avataaars/svg?seed=MarcusVance" alt="Marcus Vance" class="w-14 h-14 rounded-full bg-zinc-800" />
@@ -192,6 +186,7 @@
     <blockquote class="mt-5 text-lg text-zinc-300 italic">"El nivel técnico y la atención directa por WhatsApp hacen que trabajar con Vertex sea sumamente eficiente."</blockquote>
   </div>
 </section>
+
 <!-- FAQ -->
 <section id="faq" class="max-w-3xl mx-auto px-6 pb-24">
   <h2 class="text-3xl font-extrabold text-center grad-text mb-12">Preguntas Frecuentes</h2>
@@ -202,12 +197,12 @@
 <section id="contacto" class="max-w-5xl mx-auto px-6 pb-24">
   <h2 class="text-3xl font-extrabold text-center grad-text mb-12">Contacto</h2>
   <div class="grid sm:grid-cols-3 gap-6">
-    <a href="mailto:hola@vertexcoders.com" class="card-glass rounded-2xl p-8 text-center hover:-translate-y-1 transition block">
+    <a href="mailto:contact@vertexcoders.com" class="card-glass rounded-2xl p-8 text-center hover:-translate-y-1 transition block">
       <i data-lucide="mail" class="w-9 h-9 mx-auto text-cyan-400"></i>
       <h3 class="mt-4 font-bold">Email</h3>
       <p class="text-sm text-zinc-400 mt-1">contact@vertexcoders.com</p>
     </a>
-    <a href="tel:+13055550199" class="card-glass rounded-2xl p-8 text-center hover:-translate-y-1 transition block">
+    <a href="tel:+14788348258" class="card-glass rounded-2xl p-8 text-center hover:-translate-y-1 transition block">
       <i data-lucide="phone" class="w-9 h-9 mx-auto text-violet-400"></i>
       <h3 class="mt-4 font-bold">Teléfono corporativo</h3>
       <p class="text-sm text-zinc-400 mt-1">1 (478) 834-8258</p>
@@ -258,12 +253,20 @@
 </div>
 
 <script>
-/* ── Detección dinámica de API_BASE: local vs producción ── */
-const API_BASE = ["localhost", "127.0.0.1"].includes(location.hostname)
-  ? "http://localhost:8000"  // En local apunta a tu FastAPI
-  : "/api";
-
 const fmtUSD = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
+
+/* ── Catálogo estático directo (sin depender de fetch o backend) ── */
+const PRODUCTS = [
+  { id: 1, name: "Afinamiento de Modelos LM (QLoRA/Unsloth)", price: 1499.99, category: "IA & Agentes", image_url: "https://plus.unsplash.com/premium_photo-1683120963435-6f9355d4a776?q=80&w=726&auto=format&fit=crop" },
+  { id: 2, name: "Arquitectura de Servidores MCP (Model Context Protocol)", price: 1199.99, category: "IA & Agentes", image_url: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=500&auto=format&fit=crop" },
+  { id: 3, name: "Desarrollo de Agentes IA Autónomos", price: 1899.99, category: "IA & Agentes", image_url: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=500&auto=format&fit=crop" },
+  { id: 4, name: "Plataformas Web Full Stack & Bases de Datos", price: 899.99, category: "Backend & Web", image_url: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=500&auto=format&fit=crop" },
+  { id: 5, name: "Desarrollo de Apps Android (Jetpack Compose)", price: 1299.99, category: "Mobile Apps", image_url: "https://images.unsplash.com/photo-1607252650355-f7fd0460ccdb?q=80&w=500&auto=format&fit=crop" },
+  { id: 6, name: "Ingeniería de APIs de Alto Rendimiento (FastAPI/NestJS)", price: 799.99, category: "Backend & Web", image_url: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=500&auto=format&fit=crop" },
+  { id: 7, name: "Herramientas de Ciberseguridad & Máquinas Virtuales HTB", price: 1599.99, category: "Ciberseguridad", image_url: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=500&auto=format&fit=crop" },
+  { id: 8, name: "Creación de Literatura Técnica y Publicación KDP", price: 2499.99, category: "Editorial & Tech", image_url: "https://images.unsplash.com/photo-1532012197267-da84d127e765?q=80&w=500&auto=format&fit=crop" },
+  { id: 9, name: "Arquitecto de IA Senior & Contractor Externo (Remoto B2B)", price: 3500.00, category: "Consultoría Elite", image_url: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=500&auto=format&fit=crop" }
+];
 
 /* ── Navbar mobile ── */
 const menuBtn = document.getElementById("menu-btn");
@@ -271,30 +274,8 @@ const mobileMenu = document.getElementById("mobile-menu");
 menuBtn.addEventListener("click", () => mobileMenu.classList.toggle("hidden"));
 mobileMenu.querySelectorAll("a").forEach(a => a.addEventListener("click", () => mobileMenu.classList.add("hidden")));
 
-/* ── Productos: skeleton → fetch → render ── */
+/* ── Renderizado de Productos ── */
 const grid = document.getElementById("products-grid");
-
-function skeletons() {
-  grid.innerHTML = Array.from({ length: 5 }).map(() => `
-    <div class="card-glass rounded-2xl p-5 animate-pulse">
-      <div class="h-36 rounded-xl bg-white/5"></div>
-      <div class="h-4 w-20 mt-4 rounded bg-white/5"></div>
-      <div class="h-5 w-3/4 mt-2 rounded bg-white/5"></div>
-      <div class="h-8 w-24 mt-4 rounded bg-white/5"></div>
-    </div>`).join("");
-}
-
-function errorState() {
-  grid.innerHTML = `
-    <div class="col-span-full card-glass rounded-2xl p-10 text-center">
-      <i data-lucide="cloud-off" class="w-10 h-10 mx-auto text-red-400"></i>
-      <p class="mt-3 text-zinc-400">No pudimos cargar el catálogo.</p>
-      <button onclick="loadProducts()" class="mt-4 px-5 py-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20 transition text-sm">
-        Reintentar
-      </button>
-    </div>`;
-  lucide.createIcons();
-}
 
 function renderProducts(products) {
   grid.innerHTML = products.map(p => `
@@ -315,35 +296,11 @@ function renderProducts(products) {
   lucide.createIcons();
 }
 
-async function loadProducts() {
-  skeletons();
-  try {
-    const res = await fetch(`${API_BASE}/products`);
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    renderProducts(await res.json());
-  } catch (e) {
-    console.error(e);
-    errorState();
-  }
-}
-
-/* Feedback visual del botón "Agregar al carrito" (verde + check 1.6s) */
-function addToCart(btn) {
-  const original = btn.innerHTML;
-  btn.classList.add("!bg-emerald-500/20", "!border-emerald-500/50", "!text-emerald-400");
-  btn.innerHTML = '<i data-lucide="check" class="w-4 h-4 inline"></i> Agregado';
-  lucide.createIcons();
-  setTimeout(() => {
-    btn.classList.remove("!bg-emerald-500/20", "!border-emerald-500/50", "!text-emerald-400");
-    btn.innerHTML = original;
-  }, 1600);
-}
-
-/* ── FAQ acordeón (uno abierto a la vez) ── */
+/* ── FAQ acordeón ── */
 const FAQS = [
-  { q: "¿Cómo adquiero una solución o servicio?", a: "Selecciona el producto o arquitectura que necesitas, haz clic en 'Agregar al carrito' y completa el checkout seguro. Recibirás las credenciales o accesos por email de forma inmediata." },
-  { q: "¿Cómo se realizan las entregas de los desarrollos?", a: "Al tratarse de productos digitales, repositorios, adaptaciones de modelos y microservicios, el acceso o despliegue se habilita de inmediato tras confirmar la compra." },
-  { q: "¿Qué métodos de pago aceptan?", a: "Procesamos transacciones mediante Stripe, aceptando tarjetas de crédito/débito internacionales, Apple Pay y Google Pay con cifrado de nivel bancario." },
+  { q: "¿Cómo adquiero una solución o servicio?", a: "Selecciona el servicio que necesitas, haz clic en 'Negociar / Contactar' para ir directamente a nuestro canal de WhatsApp y concretar los detalles." },
+  { q: "¿Cómo se realizan las entregas de los desarrollos?", a: "Al tratarse de productos digitales, repositorios, adaptaciones de modelos y microservicios, el acceso o despliegue se habilita de inmediato tras confirmar el acuerdo." },
+  { q: "¿Qué métodos de pago aceptan?", a: "Procesamos transacciones mediante transferencias seguras, criptomonedas y pasarelas internacionales según el acuerdo comercial." },
   { q: "¿Qué incluye el soporte técnico?", a: "Todos nuestros productos y arquitecturas cuentan con soporte especializado de Vertex Coders LLC y actualizaciones garantizadas durante su ciclo de vida." },
   { q: "¿Ofrecen desarrollos personalizados o consultoría?", a: "Claro. Si necesitas arquitecturas a la medida, fine-tuning con datasets propios o integraciones con Model Context Protocol (MCP), puedes contactarnos directamente." },
 ];
@@ -365,7 +322,7 @@ faqList.querySelectorAll(".faq-toggle").forEach(btn => {
   });
 });
 
-/* ── Chatbot IA ── */
+/* ── Chatbot IA simulado / local estático ── */
 const fab = document.getElementById("chat-fab");
 const chatWin = document.getElementById("chat-window");
 const chatMsgs = document.getElementById("chat-messages");
@@ -375,13 +332,9 @@ let chatBootstrapped = false;
 
 function pushMsg(html, who) {
   const wrap = document.createElement("div");
-  wrap.className = who === "user"
-    ? "flex justify-end"
-    : "flex justify-start";
+  wrap.className = who === "user" ? "flex justify-end" : "flex justify-start";
   wrap.innerHTML = `<div class="max-w-[80%] px-3.5 py-2.5 rounded-2xl text-sm ${
-    who === "user"
-      ? "bg-cyan-500 text-black rounded-br-sm font-medium"
-      : "bg-white/5 border border-white/10 rounded-bl-sm text-zinc-200"
+    who === "user" ? "bg-cyan-500 text-black rounded-br-sm font-medium" : "bg-white/5 border border-white/10 rounded-bl-sm text-zinc-200"
   }">${html}</div>`;
   chatMsgs.appendChild(wrap);
   chatMsgs.scrollTop = chatMsgs.scrollHeight;
@@ -404,46 +357,31 @@ fab.addEventListener("click", () => {
   chatWin.classList.remove("hidden");
   if (!chatBootstrapped) {
     chatBootstrapped = true;
-    pushMsg("👋 ¡Hola! Soy <b>Vertex Core AI</b>. Puedo ayudarte con productos, envíos, garantías y pagos. ¿En qué te puedo ayudar?", "bot");
+    pushMsg("👋 ¡Hola! Soy <b>Vertex Core AI</b>. Puedo ayudarte con nuestros servicios de IA, desarrollo y ciberseguridad. ¿En qué te puedo ayudar?", "bot");
   }
   chatInput.focus();
 });
 document.getElementById("chat-close").addEventListener("click", () => chatWin.classList.add("hidden"));
 
-chatForm.addEventListener("submit", async (e) => {
+chatForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const msg = chatInput.value.trim();
   if (!msg) return;
   pushMsg(msg.replace(/</g, "&lt;"), "user");
   chatInput.value = "";
   showTyping();
-  try {
-    const res = await fetch(`${API_BASE}/chat`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: msg }),
-    });
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    const data = await res.json();
+  
+  setTimeout(() => {
     hideTyping();
-    pushMsg(data.reply.replace(/</g, "&lt;").replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>"), "bot");
-  } catch (err) {
-    hideTyping();
-    pushMsg("⚠️ Error de conexión. Inténtalo de nuevo en unos segundos.", "bot");
-  }
+    pushMsg("¡Entendido, brother! Para detalles finos y contrataciones directas, escríbenos al canal de WhatsApp o al correo corporativo de Vertex Coders.", "bot");
+  }, 1000);
 });
 
 /* ── Footer: año dinámico ── */
 document.getElementById("year").textContent = new Date().getFullYear();
 
-/* ── Registro del Service Worker (PWA) ── */
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/ws.js").catch(err =>
-    console.warn("SW no registrado:", err));
-}
-
 /* ── Init ── */
-loadProducts();
+renderProducts(PRODUCTS);
 lucide.createIcons();
 </script>
 </body>
