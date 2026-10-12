@@ -2,6 +2,9 @@
   publish = "."                  # Tu index.html está en la raíz
   functions = "netlify/functions" # Carpeta donde guardas tus scripts de python
 
+[build.environment]
+  SECRETS_SCAN_ENABLED = "false"
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/api"
