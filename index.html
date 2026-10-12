@@ -260,7 +260,7 @@
 <script>
 /* ── Detección dinámica de API_BASE: local vs producción ── */
 const API_BASE = ["localhost", "127.0.0.1"].includes(location.hostname)
-  ? "http://localhost:8000"
+  ? "http://localhost:8000"  // En local apunta a tu FastAPI
   : "/api";
 
 const fmtUSD = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });

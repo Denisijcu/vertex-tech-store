@@ -12,3 +12,4 @@
   from = "/api/*"
   to = "/.netlify/functions/api"
   status = 200
+
