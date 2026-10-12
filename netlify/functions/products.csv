@@ -1,0 +1,10 @@
+id,name,price,category,image_url,video_url
+1,Afinamiento de Modelos LM (QLoRA/Unsloth),1499.99,IA & Agentes,https://plus.unsplash.com/premium_photo-1683120963435-6f9355d4a776?q=80&w=726&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D
+2,Arquitectura de Servidores MCP (Model Context Protocol),1199.99,IA & Agentes,https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=500&auto=format&fit=crop,
+3,Desarrollo de Agentes IA Autónomos,1899.99,IA & Agentes,https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=500&auto=format&fit=crop,
+4,Plataformas Web Full Stack & Bases de Datos,899.99,Backend & Web,https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=500&auto=format&fit=crop,
+5,Desarrollo de Apps Android (Jetpack Compose),1299.99,Mobile Apps,https://images.unsplash.com/photo-1607252650355-f7fd0460ccdb?q=80&w=500&auto=format&fit=crop,
+6,Ingeniería de APIs de Alto Rendimiento (FastAPI/NestJS),799.99,Backend & Web,https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=500&auto=format&fit=crop,
+7,Herramientas de Ciberseguridad & Máquinas Virtuales HTB,1599.99,Ciberseguridad,https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=500&auto=format&fit=crop,
+8,Creación de Literatura Técnica y Publicación KDP (eBook/Paperback),2499.99,Editorial & Tech,https://images.unsplash.com/photo-1532012197267-da84d127e765?q=80&w=500&auto=format&fit=crop,
+9,Arquitecto de IA Senior & Contractor Externo (Remoto B2B),3500.00,Consultoría Elite,https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=500&auto=format&fit=crop,
