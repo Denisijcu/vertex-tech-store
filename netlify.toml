@@ -6,7 +6,7 @@
   SECRETS_SCAN_ENABLED = "false"
 
 [functions]
-  included_files = ["productos.csv"]
+  included_files = ["productos.csv", "netlify/functions/productos.csv"]
 
 [[redirects]]
   from = "/api/*"
