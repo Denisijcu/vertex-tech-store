@@ -17,7 +17,7 @@ logger = logging.getLogger("vertex-ai")
 AI_PROVIDER = os.getenv("AI_PROVIDER", "auto").lower()  # auto | openai | anthropic | local
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "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")
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-haiku-5-5")
 
 SYSTEM_PROMPT = (
