@@ -1,0 +1,28 @@
+{
+  "name": "Vertex Tech Store",
+  "short_name": "VertexTech",
+  "description": "Hardware de vanguardia por Vertex Coders LLC.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#09090b",
+  "background_color": "#09090b",
+  "lang": "es",
+  "dir": "ltr",
+  "categories": ["shopping", "electronics", "business"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Productos", "url": "/#productos", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Soporte / FAQ", "url": "/#faq", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] }
+  ],
+  "screenshots": [
+    { "src": "/icons/screenshot-wide.png", "sizes": "1280x720", "type": "image/png", "form_factor": "wide" },
+    { "src": "/icons/screenshot-narrow.png", "sizes": "720x1280", "type": "image/png", "form_factor": "narrow" }
+  ]
+}
