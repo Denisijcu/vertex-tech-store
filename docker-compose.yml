@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  api:
+    build: ./backend
+    container_name: vertex-api
+    env_file: ./backend/.env
+    environment:
+      ROOT_DOMAIN: localhost
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./productos.csv:/app/productos.csv:ro
+    restart: unless-stopped
+
+  web:
+    image: nginx:1.27-alpine
+    container_name: vertex-web
+    depends_on:
+      - api
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped

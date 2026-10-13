@@ -253,9 +253,14 @@
 </div>
 
 <script>
+/* ── Detección dinámica de API_BASE para el Chat ── */
+const API_BASE = ["localhost", "127.0.0.1"].includes(location.hostname)
+  ? "http://localhost:8000"
+  : "https://denisijcu-vertex-tech-store-api.hf.space";
+
 const fmtUSD = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 
-/* ── Catálogo estático directo (sin depender de fetch o backend) ── */
+/* ── Catálogo estático directo ── */
 const PRODUCTS = [
   { id: 1, name: "Afinamiento de Modelos LM (QLoRA/Unsloth)", price: 1499.99, category: "IA & Agentes", image_url: "https://plus.unsplash.com/premium_photo-1683120963435-6f9355d4a776?q=80&w=726&auto=format&fit=crop" },
   { id: 2, name: "Arquitectura de Servidores MCP (Model Context Protocol)", price: 1199.99, category: "IA & Agentes", image_url: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=500&auto=format&fit=crop" },
@@ -322,7 +327,7 @@ faqList.querySelectorAll(".faq-toggle").forEach(btn => {
   });
 });
 
-/* ── Chatbot IA simulado / local estático ── */
+/* ── Chatbot IA conectado al backend de Hugging Face ── */
 const fab = document.getElementById("chat-fab");
 const chatWin = document.getElementById("chat-window");
 const chatMsgs = document.getElementById("chat-messages");
@@ -363,18 +368,31 @@ fab.addEventListener("click", () => {
 });
 document.getElementById("chat-close").addEventListener("click", () => chatWin.classList.add("hidden"));
 
-chatForm.addEventListener("submit", (e) => {
+chatForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const msg = chatInput.value.trim();
   if (!msg) return;
+  
   pushMsg(msg.replace(/</g, "&lt;"), "user");
   chatInput.value = "";
   showTyping();
-  
-  setTimeout(() => {
+
+  try {
+    const res = await fetch(`${API_BASE}/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: msg })
+    });
+
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    
+    const data = await res.json();
     hideTyping();
-    pushMsg("¡Entendido, brother! Para detalles finos y contrataciones directas, escríbenos al canal de WhatsApp o al correo corporativo de Vertex Coders.", "bot");
-  }, 1000);
+    pushMsg((data.reply || "Sin respuesta").replace(/</g, "&lt;").replace(/\n/g, "<br>"), "bot");
+  } catch (err) {
+    hideTyping();
+    pushMsg("⚠️ Error de conexión con el backend de Hugging Face. Inténtalo de nuevo en unos segundos, brother.", "bot");
+  }
 });
 
 /* ── Footer: año dinámico ── */
