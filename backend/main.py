@@ -1,14 +1,13 @@
-"""Vertex Tech Store API — FastAPI (production-ready, tenant-aware)."""
+"""
+Vertex Tech Store API — FastAPI (production-ready, tenant-aware con catálogo en memoria).
+"""
 from __future__ import annotations
 
-import csv
 import logging
 import os
-from functools import lru_cache
-from pathlib import Path
-from typing import List, Tuple
+from typing import List
 
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
@@ -23,12 +22,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger("vertex-api")
 
-BASE_DIR = Path(__file__).parent.parent  # raíz del proyecto
-CSV_PATH = Path(os.getenv("PRODUCTS_CSV", BASE_DIR / "productos.csv"))
-
 app = FastAPI(title="Vertex Tech Store API", version="1.0.0")
 
-# CORS permisivo para desarrollo (restringir en producción)
+# CORS permisivo para desarrollo y producción
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -53,33 +49,75 @@ class ChatResponse(BaseModel):
     reply: str
     provider: str
 
-# ── Lectura eficiente del CSV con caché ────────────────────
-@lru_cache(maxsize=4)
-def _read_products(path_str: str) -> Tuple[Product, ...]:
-    path = Path(path_str)
-    if not path.exists():
-        raise FileNotFoundError(f"CSV no encontrado: {path}")
-    products: List[Product] = []
-    with path.open(newline="", encoding="utf-8") as f:
-        for row in csv.DictReader(f):
-            products.append(Product(
-                id=int(row["id"]),
-                name=row["name"].strip(),
-                price=float(row["price"]),
-                category=row["category"].strip(),
-                image_url=row["image_url"].strip(),
-            ))
-    return tuple(products)
+# ── Catálogo en Memoria (Bypasseando la dependencia de CSV) ──
+PRODUCTS_DB: List[Product] = [
+    Product(
+        id=1,
+        name="Afinamiento de Modelos LM (QLoRA/Unsloth)",
+        price=1499.99,
+        category="IA & Agentes",
+        image_url="https://plus.unsplash.com/premium_photo-1683120963435-6f9355d4a776?q=80&w=726&auto=format&fit=crop"
+    ),
+    Product(
+        id=2,
+        name="Arquitectura de Servidores MCP (Model Context Protocol)",
+        price=1199.99,
+        category="IA & Agentes",
+        image_url="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=500&auto=format&fit=crop"
+    ),
+    Product(
+        id=3,
+        name="Desarrollo de Agentes IA Autónomos",
+        price=1899.99,
+        category="IA & Agentes",
+        image_url="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=500&auto=format&fit=crop"
+    ),
+    Product(
+        id=4,
+        name="Plataformas Web Full Stack & Bases de Datos",
+        price=899.99,
+        category="Backend & Web",
+        image_url="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=500&auto=format&fit=crop"
+    ),
+    Product(
+        id=5,
+        name="Desarrollo de Apps Android (Jetpack Compose)",
+        price=1299.99,
+        category="Mobile Apps",
+        image_url="https://images.unsplash.com/photo-1607252650355-f7fd0460ccdb?q=80&w=500&auto=format&fit=crop"
+    ),
+    Product(
+        id=6,
+        name="Ingeniería de APIs de Alto Rendimiento (FastAPI/NestJS)",
+        price=799.99,
+        category="Backend & Web",
+        image_url="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=500&auto=format&fit=crop"
+    ),
+    Product(
+        id=7,
+        name="Herramientas de Ciberseguridad & Máquinas Virtuales HTB",
+        price=1599.99,
+        category="Ciberseguridad",
+        image_url="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=500&auto=format&fit=crop"
+    ),
+    Product(
+        id=8,
+        name="Creación de Literatura Técnica y Publicación KDP",
+        price=2499.99,
+        category="Editorial & Tech",
+        image_url="https://images.unsplash.com/photo-1532012197267-da84d127e765?q=80&w=500&auto=format&fit=crop"
+    ),
+    Product(
+        id=9,
+        name="Arquitecto de IA Senior & Contractor Externo (Remoto B2B)",
+        price=3500.00,
+        category="Consultoría Elite",
+        image_url="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=500&auto=format&fit=crop"
+    )
+]
 
 def get_products() -> List[Product]:
-    try:
-        return list(_read_products(str(CSV_PATH)))
-    except FileNotFoundError as exc:
-        logger.error("Catálogo no disponible: %s", exc)
-        raise HTTPException(status_code=500, detail="Catálogo no disponible temporalmente")
-    except (ValueError, KeyError):
-        logger.exception("CSV corrupto o con formato inválido")
-        raise HTTPException(status_code=500, detail="Error interno del catálogo")
+    return PRODUCTS_DB
 
 # ── Handlers globales de error ─────────────────────────────
 @app.exception_handler(HTTPException)
@@ -100,19 +138,17 @@ async def root():
 
 @app.get("/health")
 async def health():
-    csv_ok = CSV_PATH.exists()
-    return {"ok": True, "status": "healthy" if csv_ok else "degraded", "csv": csv_ok}
+    return {"ok": True, "status": "healthy", "catalog_items": len(PRODUCTS_DB)}
 
 @app.get("/products", response_model=List[Product])
 async def products(request: Request):
-    # Fase MT-2: filtrar por request.state.tenant cuando el catálogo sea multi-tenant
-    logger.info("tenant=%s solicitó el catálogo", request.state.tenant)
+    logger.info("tenant=%s solicitó el catálogo en memoria", request.state.tenant)
     return get_products()
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat(payload: ChatRequest, request: Request):
     try:
-        # 1. Obtenemos los productos actuales del CSV
+        # 1. Obtenemos los productos directos del arreglo
         products_list = get_products()
         
         # 2. Construimos un resumen del catálogo para la IA
@@ -134,9 +170,7 @@ async def chat(payload: ChatRequest, request: Request):
             "- Pagos: Tarjetas, Apple Pay y Google Pay mediante Stripe.\n"
         )
         
-        # 4. Combinamos el prompt del sistema con el mensaje del usuario 
-        # (Asegúrate de que tu función invoke_ai acepte un system prompt o un historial/mensajes, 
-        # o puedes anteponérselo al mensaje según cómo tengas estructurado ai_core).
+        # 4. Combinamos el prompt del sistema con el mensaje del cliente
         full_prompt = f"{system_prompt}\n\nPregunta del cliente: {payload.message}"
         
         reply, provider = await invoke_ai(full_prompt)
@@ -145,6 +179,7 @@ async def chat(payload: ChatRequest, request: Request):
     except Exception:
         logger.exception("Error en /chat")
         raise HTTPException(status_code=500, detail="El asistente no está disponible")
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
