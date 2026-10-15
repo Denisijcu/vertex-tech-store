@@ -1,112 +1,170 @@
-"""Núcleo de IA para Vertex Tech Store.
+"""Núcleo de IA de Vertex Coders (sitio de servicios).
 
-Soporta OpenAI, Anthropic y un fallback local por reglas.
-Los SDKs se importan de forma lazy para no romper el arranque
-si no están instalados. Configuración 100% por variables de entorno.
+Proveedores, en orden con AI_PROVIDER=auto:
+  1. huggingface  -> Hugging Face Inference Providers (router OpenAI-compatible)
+  2. openai
+  3. anthropic
+  4. local        -> fallback por reglas, sin red y sin coste (siempre disponible)
+
+Configuración 100% por variables de entorno. Los SDK se importan de forma lazy.
 """
 from __future__ import annotations
 
 import logging
 import os
 import random
-from typing import Tuple
+import re
+from typing import List, Optional, Tuple
 
 logger = logging.getLogger("vertex-ai")
 
-# ── Configuración por entorno ──────────────────────────────
-AI_PROVIDER = os.getenv("AI_PROVIDER", "auto").lower()  # auto | openai | anthropic | local
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
-ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-haiku-5-5")
 
-SYSTEM_PROMPT = (
-    "Eres 'Vertex Core AI', el asistente virtual de Vertex Tech Store. "
-    "Respondes en español, de forma breve, útil y orientada a la conversión. "
-    "Ayudas con productos de hardware, envíos, garantías y pedidos."
-)
+def _env(name: str, default: str = "") -> str:
+    """Lee una variable de entorno tolerando comentarios inline (`valor  # comentario`)."""
+    raw = os.getenv(name, default) or default
+    return raw.split("#", 1)[0].strip().strip('"').strip("'")
 
-# ── Clasificador local por intenciones (fallback sin coste) ─
+
+# ── Configuración ──────────────────────────────────────────
+AI_PROVIDER = _env("AI_PROVIDER", "auto").lower()  # auto | huggingface | openai | anthropic | local
+AI_TIMEOUT_S = float(_env("AI_TIMEOUT_S", "30") or 30)
+AI_MAX_TOKENS = int(_env("AI_MAX_TOKENS", "400") or 400)
+
+HF_TOKEN = _env("HF_TOKEN") or _env("HUGGINGFACE_HUB_TOKEN")
+HF_BASE_URL = _env("HF_BASE_URL", "https://router.huggingface.co/v1")
+HF_MODEL = _env("HF_MODEL", "meta-llama/Llama-3.3-70B-Instruct")
+
+OPENAI_API_KEY = _env("OPENAI_API_KEY")
+OPENAI_MODEL = _env("OPENAI_MODEL", "gpt-4o-mini")
+ANTHROPIC_API_KEY = _env("ANTHROPIC_API_KEY")
+ANTHROPIC_MODEL = _env("ANTHROPIC_MODEL", "claude-haiku-5-5")
+
+CONTACT_HINT = "Escríbenos por WhatsApp con el botón «Negociar / Contactar» y lo concretamos."
+
+# ── Fallback local por intenciones (sitio de servicios) ────
 KEYWORDS = {
-    "envio": ("envío", "envio", "shipping", "entrega", "demora", "llega", "courier"),
-    "garantia": ("garantía", "garantia", "devolución", "devolucion", "reembolso", "warranty"),
-    "precio": ("precio", "costo", "cuánto", "cuanto", "descuento", "oferta", "promoción", "promocion"),
-    "pago": ("pago", "tarjeta", "stripe", "paypal", "factura", "checkout"),
-    "producto": ("mouse", "teclado", "monitor", "audífono", "audifono", "headset", "adapter", "adaptador", "rgb"),
+    "precio": ("precio", "costo", "cuesta", "cuánto", "cuanto", "presupuesto", "tarifa", "cotiz"),
+    "ia": ("ia", "agente", "llm", "modelo", "fine", "qlora", "unsloth", "mcp", "chatbot", "rag"),
+    "web": ("web", "página", "pagina", "fullstack", "full stack", "api", "fastapi", "backend", "base de datos"),
+    "movil": ("android", "app", "móvil", "movil", "compose", "kotlin"),
+    "seguridad": ("seguridad", "ciber", "pentest", "htb", "hackthebox", "auditor"),
+    "libro": ("libro", "kdp", "amazon", "editorial", "publicar"),
+    "pago": ("pago", "pagar", "transferencia", "cripto", "factura"),
+    "entrega": ("entrega", "plazo", "tiempo", "cuándo", "cuando", "demora", "soporte"),
 }
 
 LOCAL_RESPONSES = {
-    "envio": "🚚 Realizamos envíos express a todo el mundo. En pedidos superiores a $50 el envío es **gratis**; de lo contrario, tarifa plana de $9.95. Entrega estimada: 2-5 días hábiles.",
-    "garantia": "🛡️ Todos nuestros productos incluyen la **Garantía Vertex** de 12 meses contra defectos de fabricación. Si algo falla, te lo reemplazamos sin preguntas.",
-    "precio": "💰 Tenemos precios competitivos y envío gratis desde $50. ¿Buscas algo específico? Puedo orientarte con el catálogo.",
-    "pago": "💳 Aceptamos tarjetas de crédito/débito, Apple Pay y Google Pay a través de Stripe, con procesamiento 100% seguro y cifrado.",
-    "producto": "🖥️ Contamos con periféricos de élite: mouse ergonómico inalámbrico ($29.99), teclado mecánico RGB ($89.50), monitor ultrawide 29\" ($249.99), headset con cancelación de ruido ($120.00) y adaptador USB-C multipuerto ($35.49).",
-    "default": "¡Hola! 👋 Soy Vertex Core AI. Puedo ayudarte con productos, envíos, garantías y pagos. ¿Qué necesitas?",
+    "precio": "Los precios del catálogo son tarifas de referencia; el costo final depende del alcance. " + CONTACT_HINT,
+    "ia": "Hacemos fine-tuning de modelos propios (QLoRA/Unsloth), servidores MCP y agentes IA autónomos con guardrails de seguridad. " + CONTACT_HINT,
+    "web": "Desarrollamos plataformas web full stack y APIs de alto rendimiento con FastAPI/NestJS y bases de datos. " + CONTACT_HINT,
+    "movil": "Creamos apps Android nativas con Kotlin y Jetpack Compose. " + CONTACT_HINT,
+    "seguridad": "Ofrecemos herramientas de ciberseguridad y máquinas virtuales tipo HackTheBox. " + CONTACT_HINT,
+    "libro": "Te ayudamos a crear y publicar literatura técnica en Amazon KDP. " + CONTACT_HINT,
+    "pago": "Trabajamos con transferencias, criptomonedas y pasarelas internacionales según el acuerdo. " + CONTACT_HINT,
+    "entrega": "Los plazos se definen según el alcance del proyecto e incluyen soporte especializado de Vertex Coders LLC. " + CONTACT_HINT,
+    "default": "¡Hola! Soy Vertex Core AI. Te ayudo con nuestros servicios de IA, desarrollo web y móvil, ciberseguridad y publicación técnica. ¿Qué necesitas?",
 }
+
 
 def _classify(message: str) -> str:
     text = message.lower()
+    tokens = set(re.findall(r"[a-záéíóúñü]+", text))
     for intent, words in KEYWORDS.items():
-        if any(w in text for w in words):
-            return intent
+        for w in words:
+            # palabras cortas: coincidencia exacta (evita que "ia" matchee "garantía");
+            # frases o palabras largas: subcadena (permite "cotiz" -> "cotización")
+            if w in tokens or ((" " in w or len(w) > 4) and w in text):
+                return intent
     return "default"
 
-# ── Providers remotos ──────────────────────────────────────
-async def _openai_reply(message: str) -> str:
+
+def _clean(text: str) -> str:
+    """Quita bloques de razonamiento (<think>…</think>) que algunos modelos devuelven."""
+    text = re.sub(r"<think>.*?</think>", "", text or "", flags=re.DOTALL)
+    return text.strip()
+
+
+def _build_messages(system_prompt: str, user_message: str, history: Optional[List[dict]]) -> List[dict]:
+    msgs = [{"role": "system", "content": system_prompt}]
+    for turn in (history or [])[-10:]:
+        role = turn.get("role")
+        content = str(turn.get("content", ""))[:2000]
+        if role in ("user", "assistant") and content:
+            msgs.append({"role": role, "content": content})
+    msgs.append({"role": "user", "content": user_message})
+    return msgs
+
+
+# ── Proveedores remotos ────────────────────────────────────
+async def _openai_compatible(base_url: Optional[str], api_key: str, model: str, messages: List[dict]) -> str:
     from openai import AsyncOpenAI  # lazy import
-    client = AsyncOpenAI(api_key=OPENAI_API_KEY)
+    client = AsyncOpenAI(api_key=api_key, base_url=base_url, timeout=AI_TIMEOUT_S, max_retries=1)
     resp = await client.chat.completions.create(
-        model=OPENAI_MODEL,
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": message},
-        ],
-        max_tokens=300,
+        model=model,
+        messages=messages,
+        max_tokens=AI_MAX_TOKENS,
         temperature=0.4,
     )
-    return resp.choices[0].message.content.strip()
+    reply = _clean(resp.choices[0].message.content or "")
+    if not reply:
+        raise RuntimeError("respuesta vacía del modelo")
+    return reply
 
-async def _anthropic_reply(message: str) -> str:
+
+async def _anthropic_reply(system_prompt: str, messages: List[dict]) -> str:
     import anthropic  # lazy import
-    client = anthropic.AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
+    client = anthropic.AsyncAnthropic(api_key=ANTHROPIC_API_KEY, timeout=AI_TIMEOUT_S, max_retries=1)
     resp = await client.messages.create(
         model=ANTHROPIC_MODEL,
-        max_tokens=300,
-        system=SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": message}],
+        max_tokens=AI_MAX_TOKENS,
+        system=system_prompt,
+        messages=[m for m in messages if m["role"] != "system"],
     )
-    
-    # Extraemos el texto de forma segura recorriendo los bloques de contenido
-    reply_text = ""
-    for block in resp.content:
-        if hasattr(block, "text") and getattr(block, "type", "text") == "text":
-            reply_text += block.text
-            
-    return reply_text.strip()
+    reply = "".join(getattr(b, "text", "") for b in resp.content if getattr(b, "type", "") == "text")
+    if not reply.strip():
+        raise RuntimeError("respuesta vacía del modelo")
+    return reply.strip()
+
 
 async def _local_reply(message: str) -> str:
-    """Fallback local: sin coste, sin red, siempre disponible."""
     intent = _classify(message)
     reply = LOCAL_RESPONSES[intent]
     if intent == "default" and len(message) > 3:
-        greetings = ("¡Perfecto! Cuéntame más para ayudarte mejor.",
-                     "Entendido. ¿Sobre qué producto o tema te gustaría saber más?",
-                     "Claro. Nuestro equipo también puede asistirte por email o chat.")
-        reply = f"{reply} {random.choice(greetings)}"
+        reply += " " + random.choice((
+            "Cuéntame un poco de tu proyecto y te oriento.",
+            "¿Buscas IA, web, móvil o ciberseguridad?",
+        ))
     return reply
 
-# ── API pública del módulo ─────────────────────────────────
-async def invoke_ai(user_message: str) -> Tuple[str, str]:
-    """Devuelve (respuesta, proveedor_usado). Nunca lanza excepción
-    al caller: si todo falla, usa el fallback local."""
-    order = ["openai", "anthropic"] if AI_PROVIDER == "auto" else [AI_PROVIDER]
+
+def active_providers() -> List[str]:
+    """Proveedores remotos configurados (para /health)."""
+    out = []
+    if HF_TOKEN:
+        out.append("huggingface")
+    if OPENAI_API_KEY:
+        out.append("openai")
+    if ANTHROPIC_API_KEY:
+        out.append("anthropic")
+    return out
+
+
+# ── API pública ────────────────────────────────────────────
+async def invoke_ai(user_message: str, system_prompt: str,
+                    history: Optional[List[dict]] = None) -> Tuple[str, str]:
+    """Devuelve (respuesta, proveedor). Nunca lanza: si todo falla, usa el fallback local."""
+    messages = _build_messages(system_prompt, user_message, history)
+    order = ["huggingface", "openai", "anthropic"] if AI_PROVIDER == "auto" else [AI_PROVIDER]
+
     for provider in order:
         try:
+            if provider == "huggingface" and HF_TOKEN:
+                return await _openai_compatible(HF_BASE_URL, HF_TOKEN, HF_MODEL, messages), "huggingface"
             if provider == "openai" and OPENAI_API_KEY:
-                return await _openai_reply(user_message), "openai"
+                return await _openai_compatible(None, OPENAI_API_KEY, OPENAI_MODEL, messages), "openai"
             if provider == "anthropic" and ANTHROPIC_API_KEY:
-                return await _anthropic_reply(user_message), "anthropic"
+                return await _anthropic_reply(system_prompt, messages), "anthropic"
         except Exception as exc:  # un proveedor caído no tumba el chat
             logger.warning("proveedor %s falló: %s", provider, exc)
-    reply = await _local_reply(user_message)
-    return reply, "local"
+
+    return await _local_reply(user_message), "local"

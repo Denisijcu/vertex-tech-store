@@ -3,8 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Vertex Tech Store — Setup de Élite</title>
-<meta name="description" content="Hardware de vanguardia por Vertex Coders LLC. Eleva tu productividad al siguiente nivel." />
+<title>Vertex Coders — Ingeniería de IA y Software</title>
+<meta name="theme-color" content="#09090b" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Vertex Coders — Ingeniería de IA y Software" />
+<meta property="og:description" content="Agentes IA, modelos propios afinados, servidores MCP, plataformas web, apps Android y ciberseguridad." />
+<meta name="description" content="Vertex Coders LLC: agentes IA, fine-tuning de modelos, servidores MCP, desarrollo web y Android, y ciberseguridad." />
 <link rel="manifest" href="/manifest.json" />
 <link rel="icon" type="image/svg+xml" href="/icons/icon.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -39,6 +43,10 @@
   @keyframes typing { 0%,60%,100%{transform:translateY(0);opacity:.4;} 30%{transform:translateY(-5px);opacity:1;} }
   .typing-dot { animation: typing 1.1s infinite; }
   .typing-dot:nth-child(2){animation-delay:.15s} .typing-dot:nth-child(3){animation-delay:.3s}
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .fade-up, .btn-glow, .online-dot, .typing-dot { animation: none !important; }
+  }
   ::-webkit-scrollbar{width:8px} ::-webkit-scrollbar-thumb{background:#27272a;border-radius:8px}
 </style>
 </head>
@@ -46,22 +54,22 @@
 
 <!-- Banner de bienvenida -->
 <div class="bg-gradient-to-r from-cyan-500/10 via-violet-500/10 to-fuchsia-500/10 border-b border-white/5 text-center py-2 text-sm text-cyan-300">
-  🚀 Bienvenido a Vertex Tech Store — Hardware impulsado por ingeniería de vanguardia
+  🚀 Bienvenido a Vertex Coders — Soluciones de IA y software impulsadas por ingeniería de vanguardia
 </div>
 
 <!-- Navbar -->
 <nav class="sticky top-0 z-50 glass border-b border-white/10">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
     <a href="#home" class="flex items-center gap-2 font-extrabold text-lg">
-      <span class="text-cyan-400">◆</span> Vertex<span class="grad-text">Tech</span>
+      <span class="text-cyan-400">◆</span> Vertex <span class="grad-text">Coders</span>
     </a>
     <div class="hidden md:flex items-center gap-8 text-sm text-zinc-400">
-      <a href="#home" class="hover:text-cyan-400 transition">🏠 Home</a>
-      <a href="#productos" class="hover:text-cyan-400 transition">Servicios</a>
+      <a href="#home" class="hover:text-cyan-400 transition flex items-center gap-1.5"><i data-lucide="home" class="w-4 h-4"></i> Inicio</a>
+      <a href="#servicios" class="hover:text-cyan-400 transition">Servicios</a>
       <a href="#nosotros" class="hover:text-cyan-400 transition">Nosotros</a>
       <a href="#faq" class="hover:text-cyan-400 transition">FAQ</a>
-      <span class="flex items-center gap-1.5 text-xs text-emerald-400">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 online-dot"></span> Online
+      <span id="api-status" class="flex items-center gap-1.5 text-xs text-zinc-500" title="Estado del asistente IA">
+        <span class="api-dot w-2 h-2 rounded-full bg-zinc-500"></span> <span class="api-label">Conectando…</span>
       </span>
       <a href="#contacto" class="px-4 py-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20 transition">Contacto</a>
     </div>
@@ -70,8 +78,8 @@
     </button>
   </div>
   <div id="mobile-menu" class="hidden md:hidden glass border-t border-white/10 px-6 py-4 flex flex-col gap-4 text-sm">
-    <a href="#home" class="hover:text-cyan-400">🏠 Home</a>
-    <a href="#productos" class="hover:text-cyan-400">Servicios</a>
+    <a href="#home" class="hover:text-cyan-400 flex items-center gap-1.5"><i data-lucide="home" class="w-4 h-4"></i> Inicio</a>
+    <a href="#servicios" class="hover:text-cyan-400">Servicios</a>
     <a href="#nosotros" class="hover:text-cyan-400">Nosotros</a>
     <a href="#faq" class="hover:text-cyan-400">FAQ</a>
     <a href="#contacto" class="text-cyan-300">Contacto</a>
@@ -81,27 +89,27 @@
 <!-- Hero -->
 <header id="home" class="relative overflow-hidden">
   <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
-    <source src="/assets/media/hero-video.mp4" type="video/mp4">
+    <source src="./assets/media/hero-video.mp4" type="video/mp4">
     Tu navegador no soporta la reproducción de video.
   </video>
   <div class="absolute inset-0 bg-black/65"></div>
   <div class="relative max-w-7xl mx-auto px-6 py-32 sm:py-40 text-center fade-up">
-    <h1 class="text-5xl sm:text-7xl font-black grad-text tracking-tight">Setup de Élite</h1>
+    <h1 class="text-5xl sm:text-7xl font-black grad-text tracking-tight">Ingeniería de IA de Élite</h1>
     <p class="mt-5 text-lg sm:text-xl text-zinc-300 max-w-2xl mx-auto">
-      Eleva tu productividad al siguiente nivel con tecnología de vanguardia
+      Agentes autónomos, modelos propios afinados, plataformas web y apps a la medida de tu negocio
     </p>
     <div class="mt-9 flex flex-col sm:flex-row gap-4 justify-center">
-      <a href="#productos" class="btn-glow px-8 py-3.5 rounded-xl bg-cyan-500 text-black font-bold hover:bg-cyan-400 transition">
-        Explorar Servicios
+      <a href="#servicios" class="btn-glow px-8 py-3.5 rounded-xl bg-cyan-500 text-black font-bold hover:bg-cyan-400 transition">
+        Ver servicios
       </a>
-      <a href="#nosotros" class="px-8 py-3.5 rounded-xl border border-white/20 font-semibold hover:border-cyan-400/60 hover:text-cyan-300 transition">
-        Conocer más
-      </a>
+      <button type="button" id="hero-chat" class="px-8 py-3.5 rounded-xl border border-white/20 font-semibold hover:border-cyan-400/60 hover:text-cyan-300 transition flex items-center justify-center gap-2">
+        <i data-lucide="bot" class="w-5 h-5"></i> Habla con Vertex Core AI
+      </button>
     </div>
-    <div class="mt-14 flex justify-center gap-10 sm:gap-16 text-sm text-zinc-400">
-      <div><p class="text-2xl font-bold text-cyan-400">24/7</p><p>Soporte</p></div>
-      <div><p class="text-2xl font-bold text-violet-400">99.9%</p><p>Uptime</p></div>
-      <div><p class="text-2xl font-bold text-fuchsia-400">Global</p><p>Envíos</p></div>
+    <div class="mt-14 flex justify-center gap-8 sm:gap-16 text-sm text-zinc-400">
+      <div><p class="text-2xl font-bold text-cyan-400">B2B</p><p>Remoto</p></div>
+      <div><p class="text-2xl font-bold text-violet-400">IA privada</p><p>Modelos locales</p></div>
+      <div><p class="text-2xl font-bold text-fuchsia-400">Directo</p><p>Trato con el ingeniero</p></div>
     </div>
   </div>
 </header>
@@ -111,8 +119,10 @@
   <div class="card-glass neon-border rounded-2xl p-10 text-center fade-up">
     <h2 class="text-3xl font-extrabold grad-text">Sobre Nosotros</h2>
     <p class="mt-5 text-zinc-400 leading-relaxed">
-      Somos Vertex Coders LLC. Compañía líder dedicada a crear todo tipo de
-      producto digital orientado a IA y soluciones de alto rendimiento.
+      Somos Vertex Coders LLC, una compañía de desarrollo de software con sede en Miami,
+      dedicada a crear productos digitales orientados a IA y soluciones de alto rendimiento.
+      Trabajas directamente con el ingeniero que construye tu solución: sin intermediarios,
+      con código propio y seguridad desde el diseño.
     </p>
   </div>
 </section>
@@ -140,50 +150,37 @@
 </section>
 
 <!-- Productos -->
-<section id="productos" class="max-w-7xl mx-auto px-6 pb-24">
+<section id="servicios" class="max-w-7xl mx-auto px-6 pb-24">
   <h2 class="text-3xl font-extrabold text-center grad-text mb-12">Servicios Destacados</h2>
   <div id="products-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 </section>
 
-<!-- Testimonios -->
-<section class="max-w-3xl mx-auto px-6 pb-24 space-y-6">
-  <div class="card-glass neon-border rounded-2xl p-10 fade-up">
-    <div class="flex items-center gap-4">
-      <img src="https://api.dicebear.com/9.x/avataaars/svg?seed=Musk" alt="Mr. Musk" class="w-14 h-14 rounded-full bg-zinc-800" />
-      <div>
-        <p class="font-bold flex items-center gap-1.5">Mr. Musk
-          <i data-lucide="badge-check" class="w-4 h-4 text-cyan-400"></i>
-        </p>
-        <p class="text-xs text-zinc-500">CEO de SpaceX / Tesla</p>
-      </div>
+<!-- Trayectoria (prueba social verificable).
+     Testimonios de clientes: añadir SOLO reales y con su permiso por escrito (regla FTC 16 CFR 465). -->
+<section id="trayectoria" class="max-w-7xl mx-auto px-6 pb-24">
+  <h2 class="text-3xl font-extrabold text-center grad-text mb-4">Trayectoria</h2>
+  <p class="text-center text-zinc-400 max-w-2xl mx-auto mb-12">Trabajo propio, publicado y en producción. Pídenos la demo de cualquiera de estos proyectos.</p>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="card-glass neon-border rounded-2xl p-7 hover:-translate-y-1 transition duration-300">
+      <i data-lucide="book-open" class="w-9 h-9 text-cyan-400"></i>
+      <h3 class="mt-4 font-bold">Autores técnicos</h3>
+      <p class="mt-2 text-sm text-zinc-400">Una docena de libros publicados en Amazon sobre agentes IA, MCP, OpenAI API, Machine Learning y Jetpack Compose.</p>
     </div>
-    <blockquote class="mt-5 text-lg text-zinc-300 italic">"La arquitectura y el rendimiento de las soluciones superan lo esperado. Muy sólido."</blockquote>
-  </div>
-
-  <div class="card-glass neon-border rounded-2xl p-10 fade-up">
-    <div class="flex items-center gap-4">
-      <img src="https://api.dicebear.com/9.x/avataaars/svg?seed=SarahChen" alt="Sarah Chen" class="w-14 h-14 rounded-full bg-zinc-800" />
-      <div>
-        <p class="font-bold flex items-center gap-1.5">Sarah Chen
-          <i data-lucide="badge-check" class="w-4 h-4 text-cyan-400"></i>
-        </p>
-        <p class="text-xs text-zinc-500">Lead AI Engineer en Nexus Corp</p>
-      </div>
+    <div class="card-glass neon-border rounded-2xl p-7 hover:-translate-y-1 transition duration-300">
+      <i data-lucide="brain-circuit" class="w-9 h-9 text-violet-400"></i>
+      <h3 class="mt-4 font-bold">Modelo propio Vertex-Core</h3>
+      <p class="mt-2 text-sm text-zinc-400">LLM afinado en local con QLoRA y protegido por nuestros propios guardrails de seguridad.</p>
     </div>
-    <blockquote class="mt-5 text-lg text-zinc-300 italic">"Integrar los modelos y optimizar los flujos de trabajo con su soporte nos ahorró semanas de desarrollo."</blockquote>
-  </div>
-
-  <div class="card-glass neon-border rounded-2xl p-10 fade-up">
-    <div class="flex items-center gap-4">
-      <img src="https://api.dicebear.com/9.x/avataaars/svg?seed=MarcusVance" alt="Marcus Vance" class="w-14 h-14 rounded-full bg-zinc-800" />
-      <div>
-        <p class="font-bold flex items-center gap-1.5">Marcus Vance
-          <i data-lucide="badge-check" class="w-4 h-4 text-cyan-400"></i>
-        </p>
-        <p class="text-xs text-zinc-500">CTO en CyberShield Labs</p>
-      </div>
+    <div class="card-glass neon-border rounded-2xl p-7 hover:-translate-y-1 transition duration-300">
+      <i data-lucide="server-cog" class="w-9 h-9 text-fuchsia-400"></i>
+      <h3 class="mt-4 font-bold">SaaS en producción</h3>
+      <p class="mt-2 text-sm text-zinc-400">Plataforma de contabilidad agent-native con herramientas MCP, multi-tenant, operando en producción.</p>
     </div>
-    <blockquote class="mt-5 text-lg text-zinc-300 italic">"El nivel técnico y la atención directa por WhatsApp hacen que trabajar con Vertex sea sumamente eficiente."</blockquote>
+    <div class="card-glass neon-border rounded-2xl p-7 hover:-translate-y-1 transition duration-300">
+      <i data-lucide="shield-check" class="w-9 h-9 text-emerald-400"></i>
+      <h3 class="mt-4 font-bold">Ciberseguridad ofensiva y defensiva</h3>
+      <p class="mt-2 text-sm text-zinc-400">Máquinas creadas para el programa HackTheBox Creator, SOC con servidores MCP y auditoría OSINT.</p>
+    </div>
   </div>
 </section>
 
@@ -207,22 +204,24 @@
       <h3 class="mt-4 font-bold">Teléfono corporativo</h3>
       <p class="text-sm text-zinc-400 mt-1">1 (478) 834-8258</p>
     </a>
-    <div class="card-glass rounded-2xl p-8 text-center">
-      <i data-lucide="share-2" class="w-9 h-9 mx-auto text-fuchsia-400"></i>
-      <h3 class="mt-4 font-bold">Redes sociales</h3>
-      <div class="flex justify-center gap-4 mt-3 text-zinc-400">
-        <a href="#" aria-label="Twitter" class="hover:text-cyan-400"><i data-lucide="twitter" class="w-5 h-5"></i></a>
-        <a href="#" aria-label="GitHub" class="hover:text-cyan-400"><i data-lucide="github" class="w-5 h-5"></i></a>
-        <a href="#" aria-label="LinkedIn" class="hover:text-cyan-400"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
-      </div>
-    </div>
+    <a href="https://chat.whatsapp.com/I2keaxhTKWh5RO0zKd55rX" target="_blank" rel="noopener noreferrer" class="card-glass rounded-2xl p-8 text-center hover:-translate-y-1 transition block">
+      <i data-lucide="message-circle" class="w-9 h-9 mx-auto text-fuchsia-400"></i>
+      <h3 class="mt-4 font-bold">WhatsApp</h3>
+      <p class="text-sm text-zinc-400 mt-1">Cotizaciones y negociación directa</p>
+    </a>
   </div>
 </section>
 
 <!-- Footer -->
 <footer class="border-t border-white/10 py-8 text-center text-sm text-zinc-500">
-  <p>© <span id="year"></span> Vertex Tech Store · Vertex Coders LLC — Todos los derechos reservados.</p>
-  <p id="status" class="mt-1 text-emerald-500">Sistemas operativos ●</p>
+  <nav class="flex flex-wrap justify-center gap-6 mb-4 text-zinc-400">
+    <a href="#servicios" class="hover:text-cyan-400">Servicios</a>
+    <a href="#nosotros" class="hover:text-cyan-400">Nosotros</a>
+    <a href="#trayectoria" class="hover:text-cyan-400">Trayectoria</a>
+    <a href="#faq" class="hover:text-cyan-400">FAQ</a>
+    <a href="#contacto" class="hover:text-cyan-400">Contacto</a>
+  </nav>
+  <p>© <span id="year"></span> Vertex Coders LLC · Miami, FL — Todos los derechos reservados.</p>
 </footer>
 
 <!-- Chatbot flotante -->
@@ -234,8 +233,8 @@
   <div class="px-5 py-4 border-b border-white/10 flex items-center justify-between">
     <div>
       <p class="font-bold flex items-center gap-2">Vertex Core AI
-        <span class="text-[10px] font-normal text-emerald-400 flex items-center gap-1">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 online-dot"></span> En línea
+        <span id="chat-status" class="text-[10px] font-normal text-zinc-500 flex items-center gap-1">
+          <span class="api-dot w-1.5 h-1.5 rounded-full bg-zinc-500"></span> <span class="api-label">Conectando…</span>
         </span>
       </p>
     </div>
@@ -286,12 +285,12 @@ function renderProducts(products) {
   grid.innerHTML = products.map(p => `
     <article class="card-glass rounded-2xl p-5 flex flex-col hover:-translate-y-1 transition duration-300">
       <div class="h-44 w-full rounded-xl overflow-hidden bg-gradient-to-br from-cyan-500/10 to-violet-500/10">
-         <img src="${p.image_url}" alt="${p.name}" class="w-full h-full object-cover">
+         <img src="${p.image_url}" alt="${p.name}" loading="lazy" width="500" height="176" class="w-full h-full object-cover" onerror="this.remove()">
       </div>
       <span class="mt-4 text-[10px] uppercase tracking-wider text-cyan-400 border border-cyan-500/30 rounded-full px-2 py-0.5 w-fit">${p.category}</span>
       <h3 class="mt-2 font-bold">${p.name}</h3>
       <div class="mt-4 flex items-center justify-between">
-        <span class="text-lg font-extrabold text-cyan-300">${fmtUSD.format(p.price)}</span>
+        <span class="flex flex-col leading-tight"><span class="text-[10px] uppercase tracking-wider text-zinc-500">Desde</span><span class="text-lg font-extrabold text-cyan-300">${fmtUSD.format(p.price)}</span></span>
         <a href="https://chat.whatsapp.com/I2keaxhTKWh5RO0zKd55rX" target="_blank" rel="noopener noreferrer" 
            class="px-3 py-1.5 rounded-lg text-xs font-bold bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20 transition flex items-center gap-1.5">
            <i data-lucide="message-circle" class="w-3.5 h-3.5"></i> Negociar / Contactar
@@ -334,13 +333,19 @@ const chatMsgs = document.getElementById("chat-messages");
 const chatForm = document.getElementById("chat-form");
 const chatInput = document.getElementById("chat-input");
 let chatBootstrapped = false;
+let chatBusy = false;
+const chatHistory = []; // últimos turnos {role, content} que se envían al backend
 
-function pushMsg(html, who) {
+/* Pinta un mensaje como TEXTO (textContent): la respuesta del modelo nunca se interpreta como HTML. */
+function pushMsg(text, who) {
   const wrap = document.createElement("div");
   wrap.className = who === "user" ? "flex justify-end" : "flex justify-start";
-  wrap.innerHTML = `<div class="max-w-[80%] px-3.5 py-2.5 rounded-2xl text-sm ${
+  const bubble = document.createElement("div");
+  bubble.className = "max-w-[80%] px-3.5 py-2.5 rounded-2xl text-sm whitespace-pre-line " + (
     who === "user" ? "bg-cyan-500 text-black rounded-br-sm font-medium" : "bg-white/5 border border-white/10 rounded-bl-sm text-zinc-200"
-  }">${html}</div>`;
+  );
+  bubble.textContent = text;
+  wrap.appendChild(bubble);
   chatMsgs.appendChild(wrap);
   chatMsgs.scrollTop = chatMsgs.scrollHeight;
 }
@@ -358,40 +363,86 @@ function showTyping() {
 }
 const hideTyping = () => document.getElementById("typing")?.remove();
 
-fab.addEventListener("click", () => {
+/* ── Estado real del asistente (GET /health) en navbar y cabecera del chat ── */
+function setApiStatus(online) {
+  document.querySelectorAll("#api-status, #chat-status").forEach(el => {
+    el.classList.remove("text-zinc-500", "text-emerald-400", "text-amber-400");
+    el.classList.add(online ? "text-emerald-400" : "text-amber-400");
+    const dot = el.querySelector(".api-dot");
+    dot.classList.remove("bg-zinc-500", "bg-emerald-400", "bg-amber-400");
+    dot.classList.add(online ? "bg-emerald-400" : "bg-amber-400");
+    dot.classList.toggle("online-dot", online);
+    el.querySelector(".api-label").textContent = online ? "En línea" : "Despertando…";
+  });
+}
+async function checkApi(retries = 3) {
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 15000);
+    const res = await fetch(`${API_BASE}/health`, { signal: ctrl.signal });
+    clearTimeout(t);
+    setApiStatus(res.ok);
+    if (!res.ok && retries > 0) setTimeout(() => checkApi(retries - 1), 10000);
+  } catch {
+    setApiStatus(false);
+    if (retries > 0) setTimeout(() => checkApi(retries - 1), 10000);
+  }
+}
+
+function openChat() {
   chatWin.classList.remove("hidden");
   if (!chatBootstrapped) {
     chatBootstrapped = true;
-    pushMsg("👋 ¡Hola! Soy <b>Vertex Core AI</b>. Puedo ayudarte con nuestros servicios de IA, desarrollo y ciberseguridad. ¿En qué te puedo ayudar?", "bot");
+    pushMsg("👋 ¡Hola! Soy Vertex Core AI. Puedo ayudarte con nuestros servicios de IA, desarrollo y ciberseguridad. ¿En qué te puedo ayudar?", "bot");
   }
   chatInput.focus();
-});
+}
+fab.addEventListener("click", openChat);
+document.getElementById("hero-chat").addEventListener("click", openChat);
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") chatWin.classList.add("hidden"); });
 document.getElementById("chat-close").addEventListener("click", () => chatWin.classList.add("hidden"));
 
 chatForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const msg = chatInput.value.trim();
-  if (!msg) return;
-  
-  pushMsg(msg.replace(/</g, "&lt;"), "user");
+  if (!msg || chatBusy) return;
+
+  chatBusy = true;
+  const sendBtn = chatForm.querySelector("button[type=submit]");
+  sendBtn.disabled = true;
+  pushMsg(msg, "user");
   chatInput.value = "";
   showTyping();
+
+  // El Space gratuito de HF puede estar "dormido": damos margen al primer arranque.
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 60000);
 
   try {
     const res = await fetch(`${API_BASE}/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: msg })
+      body: JSON.stringify({ message: msg, history: chatHistory.slice(-10) }),
+      signal: ctrl.signal
     });
-
     if (!res.ok) throw new Error("HTTP " + res.status);
-    
+
     const data = await res.json();
+    const reply = (data.reply || "Sin respuesta").trim();
     hideTyping();
-    pushMsg((data.reply || "Sin respuesta").replace(/</g, "&lt;").replace(/\n/g, "<br>"), "bot");
+    pushMsg(reply, "bot");
+    chatHistory.push({ role: "user", content: msg }, { role: "assistant", content: reply });
+    if (chatHistory.length > 20) chatHistory.splice(0, chatHistory.length - 20);
   } catch (err) {
     hideTyping();
-    pushMsg("⚠️ Error de conexión con el backend de Hugging Face. Inténtalo de nuevo en unos segundos, brother.", "bot");
+    pushMsg(err.name === "AbortError"
+      ? "⏳ El asistente está tardando más de lo normal. Inténtalo de nuevo en unos segundos."
+      : "⚠️ No pude conectar con el asistente. Inténtalo de nuevo o escríbenos por WhatsApp.", "bot");
+  } finally {
+    clearTimeout(timer);
+    chatBusy = false;
+    sendBtn.disabled = false;
+    chatInput.focus();
   }
 });
 
@@ -401,6 +452,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
 /* ── Init ── */
 renderProducts(PRODUCTS);
 lucide.createIcons();
+checkApi();
 </script>
 </body>
 </html>

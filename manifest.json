@@ -1,7 +1,7 @@
 {
-  "name": "Vertex Tech Store",
-  "short_name": "VertexTech",
-  "description": "Hardware de vanguardia por Vertex Coders LLC.",
+  "name": "Vertex Coders",
+  "short_name": "Vertex Coders",
+  "description": "Ingeniería de IA y software a la medida por Vertex Coders LLC.",
   "id": "/",
   "start_url": "/",
   "scope": "/",
@@ -18,7 +18,7 @@
     { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "shortcuts": [
-    { "name": "Productos", "url": "/#productos", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Servicios", "url": "/#servicios", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
     { "name": "Soporte / FAQ", "url": "/#faq", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] }
   ],
   "screenshots": [
