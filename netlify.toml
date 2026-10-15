@@ -1,15 +1,24 @@
 [build]
-  publish = "."                  
-  functions = "netlify/functions" 
-
-[build.environment]
-  SECRETS_SCAN_ENABLED = "false"
+  publish = "."
+  functions = "netlify/functions"
 
 [functions]
   included_files = ["productos.csv", "netlify/functions/productos.csv"]
+
+# El backend vive en el Space de Hugging Face: su código no se sirve desde la web pública.
+[[redirects]]
+  from = "/backend/*"
+  to = "/index.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/docs/*"
+  to = "/index.html"
+  status = 404
+  force = true
 
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/api"
   status = 200
-

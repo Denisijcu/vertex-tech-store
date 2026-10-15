@@ -56,6 +56,7 @@ class ChatTurn(BaseModel):
 class ChatRequest(BaseModel):
     message: str = Field(min_length=1, max_length=2000)
     history: List[ChatTurn] = Field(default_factory=list, max_length=20)
+    lang: str = Field(default="es", pattern="^(es|en)$")  # idioma de la interfaz
 
 class ChatResponse(BaseModel):
     reply: str
@@ -128,6 +129,19 @@ PRODUCTS_DB: List[Product] = [
     )
 ]
 
+# Nombres en inglés para el asistente cuando la página está en EN (id -> (nombre, categoría))
+PRODUCTS_EN = {
+    1: ("LLM Fine-Tuning (QLoRA/Unsloth)", "AI & Agents"),
+    2: ("MCP Server Architecture (Model Context Protocol)", "AI & Agents"),
+    3: ("Autonomous AI Agent Development", "AI & Agents"),
+    4: ("Full Stack Web Platforms & Databases", "Backend & Web"),
+    5: ("Android App Development (Jetpack Compose)", "Mobile Apps"),
+    6: ("High-Performance API Engineering (FastAPI/NestJS)", "Backend & Web"),
+    7: ("Cybersecurity Tools & HTB Virtual Machines", "Cybersecurity"),
+    8: ("Technical Book Writing & KDP Publishing", "Publishing & Tech"),
+    9: ("Senior AI Architect & External Contractor (Remote B2B)", "Elite Consulting"),
+}
+
 def get_products() -> List[Product]:
     return PRODUCTS_DB
 
@@ -165,21 +179,29 @@ async def chat(payload: ChatRequest, request: Request):
         products_list = get_products()
         
         # 2. Resumen del catálogo de servicios para la IA
-        catalog_context = "\n".join(
-            f"- {p.name} | Categoría: {p.category} | Tarifa de referencia: ${p.price:,.2f} USD"
-            for p in products_list
-        )
+        lines = []
+        for p in products_list:
+            name, cat = (p.name, p.category)
+            if payload.lang == "en":
+                name, cat = PRODUCTS_EN.get(p.id, (name, cat))
+            lines.append(f"- {name} | Categoría: {cat} | Tarifa de referencia: ${p.price:,.2f} USD")
+        catalog_context = "\n".join(lines)
 
         # 3. Reglas del asistente (sitio de SERVICIOS, no tienda de hardware)
         system_prompt = (
             "Eres 'Vertex Core AI', el asistente oficial de Vertex Coders LLC, una compañía de "
             "desarrollo de software con sede en Miami especializada en productos digitales orientados a IA.\n"
-            "Responde siempre en el idioma del cliente (por defecto español), de forma profesional, "
-            "cercana y breve (máximo 4-5 frases).\n\n"
+            "Responde siempre en el idioma en que escribe el cliente; si no queda claro, usa "
+            f"{'inglés' if payload.lang == 'en' else 'español'} (idioma de la página). "
+            "Sé profesional, cercano y breve (máximo 4-5 frases o una lista corta).\n"
+            "FORMATO: texto plano, SIN Markdown (nada de asteriscos, almohadillas, negritas ni tablas). "
+            "Para enumerar, pon cada elemento en su propia línea empezando con '• '. "
+            "Si respondes en inglés, traduce también los nombres de los servicios.\n\n"
             f"Servicios que ofrecemos:\n{catalog_context}\n\n"
             "Información comercial:\n"
             "- Las tarifas son de referencia; el precio final depende del alcance y se acuerda con el cliente.\n"
-            "- Contratación: el cliente pulsa 'Negociar / Contactar' y habla con nosotros por WhatsApp.\n"
+            f"- Contratación: el cliente pulsa '{'Negotiate / Contact' if payload.lang == 'en' else 'Negociar / Contactar'}' "
+            "y habla con nosotros por WhatsApp.\n"
             "- Pagos: transferencias, criptomonedas y pasarelas internacionales según el acuerdo.\n"
             "- Entregas: repositorios, modelos o despliegues; el acceso se habilita tras confirmar el acuerdo.\n"
             "- Soporte especializado de Vertex Coders LLC durante el ciclo de vida del producto.\n\n"
@@ -192,7 +214,7 @@ async def chat(payload: ChatRequest, request: Request):
         )
 
         history = [t.model_dump() for t in payload.history]
-        reply, provider = await invoke_ai(payload.message, system_prompt, history)
+        reply, provider = await invoke_ai(payload.message, system_prompt, history, payload.lang)
         logger.info("chat tenant=%s provider=%s", request.state.tenant, provider)
         return ChatResponse(reply=reply, provider=provider)
     except Exception:

@@ -66,11 +66,38 @@ LOCAL_RESPONSES = {
 }
 
 
+CONTACT_HINT_EN = "Message us on WhatsApp with the «Negotiate / Contact» button and we'll sort out the details."
+
+LOCAL_RESPONSES_EN = {
+    "precio": "Catalog prices are reference rates; the final cost depends on scope. " + CONTACT_HINT_EN,
+    "ia": "We fine-tune custom models (QLoRA/Unsloth), build MCP servers and autonomous AI agents with security guardrails. " + CONTACT_HINT_EN,
+    "web": "We build full stack web platforms and high-performance APIs with FastAPI/NestJS and databases. " + CONTACT_HINT_EN,
+    "movil": "We build native Android apps with Kotlin and Jetpack Compose. " + CONTACT_HINT_EN,
+    "seguridad": "We offer cybersecurity tooling and HackTheBox-style virtual machines. " + CONTACT_HINT_EN,
+    "libro": "We help you write and publish technical books on Amazon KDP. " + CONTACT_HINT_EN,
+    "pago": "We accept bank transfers, crypto and international payment gateways, per agreement. " + CONTACT_HINT_EN,
+    "entrega": "Timelines depend on project scope and include specialized support from Vertex Coders LLC. " + CONTACT_HINT_EN,
+    "default": "Hi! I'm Vertex Core AI. I can help with our AI, web and mobile development, cybersecurity and technical publishing services. What do you need?",
+}
+
+# Palabras clave en inglés para el clasificador local
+KEYWORDS_EN = {
+    "precio": ("price", "cost", "how much", "quote", "rate", "budget"),
+    "ia": ("ai", "agent", "llm", "model", "fine", "qlora", "mcp", "chatbot", "rag"),
+    "web": ("web", "website", "fullstack", "full stack", "api", "backend", "database"),
+    "movil": ("android", "app", "mobile", "compose", "kotlin"),
+    "seguridad": ("security", "cyber", "pentest", "htb", "hackthebox", "audit"),
+    "libro": ("book", "kdp", "amazon", "publish"),
+    "pago": ("pay", "payment", "transfer", "crypto", "invoice"),
+    "entrega": ("delivery", "timeline", "deadline", "when", "support"),
+}
+
+
 def _classify(message: str) -> str:
     text = message.lower()
     tokens = set(re.findall(r"[a-záéíóúñü]+", text))
-    for intent, words in KEYWORDS.items():
-        for w in words:
+    for intent in KEYWORDS:
+        for w in KEYWORDS[intent] + KEYWORDS_EN.get(intent, ()):
             # palabras cortas: coincidencia exacta (evita que "ia" matchee "garantía");
             # frases o palabras largas: subcadena (permite "cotiz" -> "cotización")
             if w in tokens or ((" " in w or len(w) > 4) and w in text):
@@ -81,6 +108,11 @@ def _classify(message: str) -> str:
 def _clean(text: str) -> str:
     """Quita bloques de razonamiento (<think>…</think>) que algunos modelos devuelven."""
     text = re.sub(r"<think>.*?</think>", "", text or "", flags=re.DOTALL)
+    # Red de seguridad por si el modelo ignora la regla de "sin Markdown"
+    text = re.sub(r"\*\*(.+?)\*\*", r"\1", text)                 # **negrita**
+    text = re.sub(r"^\s*#{1,6}\s*", "", text, flags=re.MULTILINE)   # # encabezados
+    text = re.sub(r"^\s*[\*\-]\s+", "• ", text, flags=re.MULTILINE)  # * item / - item
+    text = re.sub(r"\s+\*\s+(?=\S)", "\n• ", text)                # lista * en línea
     return text.strip()
 
 
@@ -121,13 +153,16 @@ async def _anthropic_reply(system_prompt: str, messages: List[dict]) -> str:
         messages=[m for m in messages if m["role"] != "system"],
     )
     reply = "".join(getattr(b, "text", "") for b in resp.content if getattr(b, "type", "") == "text")
-    if not reply.strip():
+    reply = _clean(reply)
+    if not reply:
         raise RuntimeError("respuesta vacía del modelo")
-    return reply.strip()
+    return reply
 
 
-async def _local_reply(message: str) -> str:
+async def _local_reply(message: str, lang: str = "es") -> str:
     intent = _classify(message)
+    if lang == "en":
+        return LOCAL_RESPONSES_EN[intent]
     reply = LOCAL_RESPONSES[intent]
     if intent == "default" and len(message) > 3:
         reply += " " + random.choice((
@@ -151,7 +186,7 @@ def active_providers() -> List[str]:
 
 # ── API pública ────────────────────────────────────────────
 async def invoke_ai(user_message: str, system_prompt: str,
-                    history: Optional[List[dict]] = None) -> Tuple[str, str]:
+                    history: Optional[List[dict]] = None, lang: str = "es") -> Tuple[str, str]:
     """Devuelve (respuesta, proveedor). Nunca lanza: si todo falla, usa el fallback local."""
     messages = _build_messages(system_prompt, user_message, history)
     order = ["huggingface", "openai", "anthropic"] if AI_PROVIDER == "auto" else [AI_PROVIDER]
@@ -167,4 +202,4 @@ async def invoke_ai(user_message: str, system_prompt: str,
         except Exception as exc:  # un proveedor caído no tumba el chat
             logger.warning("proveedor %s falló: %s", provider, exc)
 
-    return await _local_reply(user_message), "local"
+    return await _local_reply(user_message, lang), "local"
