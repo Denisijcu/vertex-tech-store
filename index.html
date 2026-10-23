@@ -77,6 +77,7 @@
     <div class="hidden md:flex items-center gap-7 text-sm text-zinc-400">
       <a href="#home" class="hover:text-cyan-400 transition flex items-center gap-1.5"><i data-lucide="home" class="w-4 h-4"></i> <span data-i18n="nav.home">Inicio</span></a>
       <a href="#servicios" class="hover:text-cyan-400 transition" data-i18n="nav.services">Servicios</a>
+      <a href="#trabajo" class="hover:text-cyan-400 transition" data-i18n="nav.work">Trabajo</a>
       <a href="#nosotros" class="hover:text-cyan-400 transition" data-i18n="nav.about">Nosotros</a>
       <a href="#faq" class="hover:text-cyan-400 transition">FAQ</a>
       <span id="api-status" class="flex items-center gap-1.5 text-xs text-zinc-500">
@@ -101,6 +102,7 @@
   <div id="mobile-menu" class="hidden md:hidden glass border-t border-white/10 px-6 py-4 flex flex-col gap-4 text-sm">
     <a href="#home" class="hover:text-cyan-400 flex items-center gap-1.5"><i data-lucide="home" class="w-4 h-4"></i> <span data-i18n="nav.home">Inicio</span></a>
     <a href="#servicios" class="hover:text-cyan-400" data-i18n="nav.services">Servicios</a>
+    <a href="#trabajo" class="hover:text-cyan-400" data-i18n="nav.work">Trabajo</a>
     <a href="#nosotros" class="hover:text-cyan-400" data-i18n="nav.about">Nosotros</a>
     <a href="#faq" class="hover:text-cyan-400">FAQ</a>
     <a href="#contacto" class="text-cyan-300" data-i18n="nav.contact">Contacto</a>
@@ -205,6 +207,17 @@
   </div>
 </section>
 
+<!-- Trabajo publicado: todo con enlace verificable. Los datos están en WORK (en el <script>). -->
+<section id="trabajo" class="max-w-7xl mx-auto px-6 pb-24">
+  <h2 class="text-3xl font-extrabold text-center grad-text mb-4" data-i18n="work.title">Trabajo publicado</h2>
+  <p class="text-center text-zinc-400 max-w-2xl mx-auto mb-10" data-i18n="work.sub">No te pedimos que nos creas: aquí está el trabajo, publicado y abierto. Ábrelo, descárgalo y pruébalo.</p>
+  <div id="work-profiles" class="flex flex-wrap justify-center gap-3 mb-12"></div>
+  <h3 class="text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="brain-circuit" class="w-5 h-5 text-cyan-400"></i> <span data-i18n="work.models">Modelos publicados en Hugging Face</span></h3>
+  <div id="work-models" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-14"></div>
+  <h3 class="text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="rocket" class="w-5 h-5 text-fuchsia-400"></i> <span data-i18n="work.demos">Demos en vivo y videos</span></h3>
+  <div id="work-demos" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+</section>
+
 <!-- FAQ -->
 <section id="faq" class="max-w-3xl mx-auto px-6 pb-24">
   <h2 class="text-3xl font-extrabold text-center grad-text mb-12" data-i18n="faq.title">Preguntas Frecuentes</h2>
@@ -240,6 +253,7 @@
     <a href="#servicios" class="hover:text-cyan-400" data-i18n="nav.services">Servicios</a>
     <a href="#nosotros" class="hover:text-cyan-400" data-i18n="nav.about">Nosotros</a>
     <a href="#trayectoria" class="hover:text-cyan-400" data-i18n="track.title">Trayectoria</a>
+    <a href="#trabajo" class="hover:text-cyan-400" data-i18n="nav.work">Trabajo</a>
     <a href="#faq" class="hover:text-cyan-400">FAQ</a>
     <a href="#contacto" class="hover:text-cyan-400" data-i18n="nav.contact">Contacto</a>
   </nav>
@@ -289,7 +303,11 @@ const I18N = {
     "meta.desc": "Vertex Coders LLC: agentes IA, fine-tuning de modelos, servidores MCP, desarrollo web y Android, y ciberseguridad.",
     "skip": "Saltar al contenido",
     "banner": "Bienvenido a Vertex Coders — Soluciones de IA y software impulsadas por ingeniería de vanguardia",
-    "nav.home": "Inicio", "nav.services": "Servicios", "nav.about": "Nosotros", "nav.contact": "Contacto",
+    "nav.home": "Inicio", "nav.services": "Servicios", "nav.about": "Nosotros", "nav.contact": "Contacto", "nav.work": "Trabajo",
+    "work.title": "Trabajo publicado",
+    "work.sub": "No te pedimos que nos creas: aquí está el trabajo, publicado y abierto. Ábrelo, descárgalo y pruébalo.",
+    "work.models": "Modelos publicados en Hugging Face", "work.demos": "Demos en vivo y videos",
+    "work.open.model": "Ver en Hugging Face", "work.open.demo": "Abrir demo", "work.open.video": "Ver video",
     "status.connecting": "Conectando…", "status.online": "En línea", "status.waking": "Despertando…",
     "hero.title": "Ingeniería de IA de Élite",
     "hero.sub": "Agentes autónomos, modelos propios afinados, plataformas web y apps a la medida de tu negocio",
@@ -325,7 +343,11 @@ const I18N = {
     "meta.desc": "Vertex Coders LLC: AI agents, model fine-tuning, MCP servers, web and Android development, and cybersecurity.",
     "skip": "Skip to content",
     "banner": "Welcome to Vertex Coders — AI and software solutions powered by cutting-edge engineering",
-    "nav.home": "Home", "nav.services": "Services", "nav.about": "About", "nav.contact": "Contact",
+    "nav.home": "Home", "nav.services": "Services", "nav.about": "About", "nav.contact": "Contact", "nav.work": "Work",
+    "work.title": "Published work",
+    "work.sub": "We don't ask you to take our word for it: here is the work, published and open. Open it, download it, try it.",
+    "work.models": "Models published on Hugging Face", "work.demos": "Live demos and videos",
+    "work.open.model": "View on Hugging Face", "work.open.demo": "Open demo", "work.open.video": "Watch video",
     "status.connecting": "Connecting…", "status.online": "Online", "status.waking": "Waking up…",
     "hero.title": "Elite AI Engineering",
     "hero.sub": "Autonomous agents, custom fine-tuned models, web platforms and apps built around your business",
@@ -397,6 +419,90 @@ const FAQS = {
     ["Do you offer custom development or consulting?", "Yes. If you need a custom architecture, fine-tuning on your own data or Model Context Protocol (MCP) integrations, get in touch."]
   ]
 };
+
+/* ════════════════════════════════════════════════════════════
+   Trabajo publicado — SOLO cosas con enlace real.
+   Un perfil o demo con url: "" no se muestra (así no hay botones rotos).
+   ════════════════════════════════════════════════════════════ */
+const HF = (repo) => `https://huggingface.co/Denisijcu/${repo}`;
+const WORK = {
+  profiles: [
+    { icon: "boxes",         label: "Hugging Face", url: "https://huggingface.co/Denisijcu" },
+    { icon: "trophy",        label: "Kaggle",       url: "https://www.kaggle.com/denissanchez" },
+    { icon: "youtube",       label: "YouTube",      url: "" },  // pendiente: URL del canal de Vertex Coders
+    { icon: "book-open",     label: "Amazon",       url: "" },  // pendiente: página de autor de Amazon
+    { icon: "github",        label: "GitHub",       url: "" },  // pendiente: perfil de GitHub
+    { icon: "smartphone",    label: "Google Play",  url: "" }   // pendiente: página de desarrollador
+  ],
+  models: [
+    { repo: "vertex-core-gguf", tag: "Qwen3 4B",
+      es: ["Vertex-Core", "Nuestro modelo propio de propósito general, en español e inglés, para correr en local."],
+      en: ["Vertex-Core", "Our own general-purpose model, in Spanish and English, built to run locally."] },
+    { repo: "vertex-core-sql-4b-v3-GGUF", tag: "Text-to-SQL",
+      es: ["Vertex-Core SQL", "Pregunta en español o inglés y obtén la consulta SQL. 78,9 % de aciertos en preguntas que nunca vio, con firewall de solo lectura."],
+      en: ["Vertex-Core SQL", "Ask in Spanish or English and get the SQL query. 78.9% execution accuracy on unseen questions, with a read-only SQL firewall."] },
+    { repo: "vertex-core-q4km-v9", tag: "Gemma 2 9B · MCP",
+      es: ["Vertex-Core v9 (agente)", "Agente con llamadas a herramientas MCP: busca, lee y escribe archivos sin inventar datos."],
+      en: ["Vertex-Core v9 (agent)", "Agent with MCP tool calling: searches, reads and writes files without making up data."] },
+    { repo: "Vertex-Core-Gemma", tag: "Gemma 2 · Code",
+      es: ["Vertex-Core Gemma", "Modelo para ingeniería de software: generar, editar y depurar código."],
+      en: ["Vertex-Core Gemma", "A software-engineering model: code generation, editing and debugging."] },
+    { repo: "vertex-gemma-2b-mcp-gguf", tag: "Gemma 2 2B · MCP",
+      es: ["Vertex Gemma MCP", "Asistente ligero de auditoría de seguridad conectado a servidores MCP. 1,7 GB, corre sin GPU."],
+      en: ["Vertex Gemma MCP", "A lightweight security-audit assistant for MCP servers. 1.7 GB, runs without a GPU."] },
+    { repo: "vertex-math-k12-gguf", tag: "Qwen2.5-Math 1.5B",
+      es: ["Vertex Math K-12", "Tutor de matemáticas para primaria y secundaria que explica cada paso. Menos de 1 GB."],
+      en: ["Vertex Math K-12", "A K-12 math tutor that explains every step. Under 1 GB."] },
+    { repo: "vertex-math", tag: "Qwen2.5 0.5B · Edge",
+      es: ["Vertex Math (edge)", "Razonamiento matemático en un modelo diminuto, pensado para dispositivos."],
+      en: ["Vertex Math (edge)", "Math reasoning in a tiny model, built for on-device use."] },
+    { repo: "vertexqwen", tag: "Qwen 2.5 3B · Chess",
+      es: ["Vertex Qwen (ajedrez)", "Uno de los dos modelos del libro «Jaque al modelo», medidos jugando entre ellos."],
+      en: ["Vertex Qwen (chess)", "One of the two models from the book «Jaque al modelo», measured playing against each other."] },
+    { repo: "vertexgemma", tag: "Gemma 2 2B · Chess",
+      es: ["Vertex Gemma (ajedrez)", "El rival de Qwen en la arena de ajedrez. Puedes jugar contra los dos en la demo."],
+      en: ["Vertex Gemma (chess)", "Qwen's opponent in the chess arena. You can play both in the demo."] }
+  ],
+  demos: [
+    { kind: "demo", icon: "swords", url: "https://vertex-ai-chess.netlify.app",
+      es: ["Vertex Chess Arena", "Juega contra nuestros modelos de ajedrez desde el navegador o el móvil. Backend en Hugging Face con respaldo en CPU."],
+      en: ["Vertex Chess Arena", "Play our chess models from your browser or phone. Hugging Face backend with a CPU fallback."] },
+    { kind: "video", icon: "play-circle", url: "https://youtu.be/2_t0ijTg1_M",
+      es: ["Jaque al modelo — el experimento", "Dos modelos afinados con los mismos datos, un torneo y lo que de verdad pasó."],
+      en: ["Jaque al modelo — the experiment", "Two models fine-tuned on the same data, a tournament, and what really happened."] }
+  ]
+};
+
+const esc = (s) => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function renderWork() {
+  document.getElementById("work-profiles").innerHTML = WORK.profiles.filter(p => p.url).map(p => `
+    <a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer"
+       class="px-4 py-2 rounded-xl card-glass hover:border-cyan-400/50 hover:text-cyan-300 transition flex items-center gap-2 text-sm font-semibold">
+      <i data-lucide="${p.icon}" class="w-4 h-4"></i> ${esc(p.label)}
+    </a>`).join("");
+  document.getElementById("work-models").innerHTML = WORK.models.map(m => {
+    const [name, desc] = m[LANG];
+    return `
+    <a href="${HF(m.repo)}" target="_blank" rel="noopener noreferrer"
+       class="card-glass rounded-2xl p-6 flex flex-col hover:-translate-y-1 hover:border-cyan-400/40 transition duration-300 group">
+      <span class="text-[10px] uppercase tracking-wider text-violet-300 border border-violet-500/30 rounded-full px-2 py-0.5 w-fit">${esc(m.tag)}</span>
+      <h4 class="mt-3 font-bold">${esc(name)}</h4>
+      <p class="mt-2 text-sm text-zinc-400 flex-1">${esc(desc)}</p>
+      <span class="mt-4 text-xs font-bold text-cyan-300 flex items-center gap-1.5 group-hover:gap-2.5 transition-all">${t("work.open.model")} <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i></span>
+    </a>`;
+  }).join("");
+  document.getElementById("work-demos").innerHTML = WORK.demos.filter(d => d.url).map(d => {
+    const [name, desc] = d[LANG];
+    return `
+    <a href="${esc(d.url)}" target="_blank" rel="noopener noreferrer"
+       class="card-glass neon-border rounded-2xl p-6 flex flex-col hover:-translate-y-1 transition duration-300 group">
+      <i data-lucide="${d.icon}" class="w-8 h-8 text-fuchsia-400"></i>
+      <h4 class="mt-3 font-bold">${esc(name)}</h4>
+      <p class="mt-2 text-sm text-zinc-400 flex-1">${esc(desc)}</p>
+      <span class="mt-4 text-xs font-bold text-cyan-300 flex items-center gap-1.5 group-hover:gap-2.5 transition-all">${t("work.open." + d.kind)} <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i></span>
+    </a>`;
+  }).join("");
+}
 
 /* ── Estado de idioma: ?lang= > elección guardada > idioma del navegador ── */
 function initialLang() {
@@ -471,6 +577,7 @@ function applyLang(lang) {
   document.getElementById("menu-btn").setAttribute("aria-label", t("menu"));
   document.querySelectorAll(".lang-btn").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
   renderProducts();
+  renderWork();
   renderFaq();
   if (apiOnline !== null) setApiStatus(apiOnline);
   lucide.createIcons();
