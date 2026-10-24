@@ -463,9 +463,15 @@ const WORK = {
       en: ["Vertex Qwen (chess)", "One of the two models from the book «Jaque al modelo», measured playing against each other."] },
     { repo: "vertexgemma", tag: "Gemma 2 2B · Chess",
       es: ["Vertex Gemma (ajedrez)", "El rival de Qwen en la arena de ajedrez. Puedes jugar contra los dos en la demo."],
-      en: ["Vertex Gemma (chess)", "Qwen's opponent in the chess arena. You can play both in the demo."] }
+      en: ["Vertex Gemma (chess)", "Qwen's opponent in the chess arena. You can play both in the demo."] },
+    { repo: "vertex-solar-tornado-detector", tag: "YOLO11n · Visión",
+      es: ["Vertex Solar Tornado Detector", "Detecta tornados magnéticos en imágenes del Sol (SDO/AIA). mAP50 de 97,3 % en validación, con un modelo de 5 MB."],
+      en: ["Vertex Solar Tornado Detector", "Detects magnetic tornadoes in images of the Sun (SDO/AIA). 97.3% mAP50 on validation, in a 5 MB model."] }
   ],
   demos: [
+    { kind: "demo", icon: "sun", url: "https://huggingface.co/spaces/Denisijcu/vertex-solar-tornado-detector",
+      es: ["Vertex Solar Tornado Detector", "Sube una imagen solar y el modelo marca los tornados magnéticos, con recortes y telemetría descargable en JSON."],
+      en: ["Vertex Solar Tornado Detector", "Upload a solar image and the model marks the magnetic tornadoes, with crops and downloadable JSON telemetry."] },
     { kind: "demo", icon: "swords", url: "https://vertex-ai-chess.netlify.app",
       es: ["Vertex Chess Arena", "Juega contra nuestros modelos de ajedrez desde el navegador o el móvil. Backend en Hugging Face con respaldo en CPU."],
       en: ["Vertex Chess Arena", "Play our chess models from your browser or phone. Hugging Face backend with a CPU fallback."] },
